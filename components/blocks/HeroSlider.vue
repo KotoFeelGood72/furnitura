@@ -12,18 +12,27 @@
         }"
         :pagination="{ el: '.hero-pagination', clickable: true }"
       >
-        <SwiperSlide v-for="(item, i) in slides" :key="'hero-item-slide-' + item.id">
+        <SwiperSlide
+          v-for="(item, i) in slides"
+          :key="'hero-item-slide-' + item.id"
+        >
           <div class="hero_slide">
             <div class="hero_slide__content">
               <p>{{ item.headtitle }}</p>
               <h1>{{ item.title }}</h1>
               <span>{{ item.subtitle }}</span>
               <div class="hero__link">
-                <DefaultBtn name="Купить" type="secondary" color="black" size="large" />
+                <DefaultBtn
+                  name="Купить"
+                  type="secondary"
+                  color="black"
+                  size="large"
+                  @click="router.push('/shop/')"
+                />
               </div>
             </div>
             <div class="hero_slide__img">
-              <img :src="item.img" alt="" />
+              <img :src="item.img.link" alt="" />
             </div>
           </div>
         </SwiperSlide>
@@ -45,6 +54,9 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Navigation, Pagination, EffectFade } from "swiper/modules";
 import DefaultBtn from "../ui/DefaultBtn.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 defineProps<{
   slides?: any;
 }>();
@@ -108,6 +120,8 @@ defineProps<{
 
 .hero__link {
   display: inline-flex;
+  position: relative;
+  z-index: 99;
 }
 
 .hero_navigation {
@@ -177,5 +191,17 @@ defineProps<{
 
 :deep(.swiper-pagination-bullet-active) {
   background-color: $lbrown;
+}
+
+.hero_slider * {
+  z-index: 0;
+  transition: none !important;
+}
+
+.hero__link {
+  z-index: 9999 !important;
+}
+.hero_navigation {
+  pointer-events: none;
 }
 </style>

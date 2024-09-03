@@ -20,6 +20,11 @@ const nav = ref<any>([
   gap: 6rem;
   a {
     font-size: 1.8rem;
+    &.router-link-exact-active {
+      color: $brown;
+      font-family: $font_2;
+      font-weight: 500;
+    }
   }
 }
 </style>

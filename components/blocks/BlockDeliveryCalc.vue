@@ -36,7 +36,7 @@
         />
         <label :for="method.name">
           <img :src="method.logo" alt="" />
-          {{ method.name }} {{ method.price }} ₽
+          <span>{{ method.name }}</span> <strong>{{ method.price }} ₽</strong>
         </label>
       </div>
     </div>
@@ -48,7 +48,7 @@ import { ref } from "vue";
 import axios from "axios";
 
 const query = ref("");
-const suggestions = ref([]);
+const suggestions = ref<any>([]);
 const selectedAddress = ref("");
 const selectedMethod = ref("");
 
@@ -97,6 +97,8 @@ const selectSuggestion = (suggestion: any) => {
   h3 {
     font-size: 3rem;
     margin-bottom: 3rem;
+    font-weight: 500;
+    font-family: $font_2;
   }
   .delivery__address {
     max-width: 53.6rem;
@@ -122,37 +124,34 @@ const selectSuggestion = (suggestion: any) => {
 .delivery_siqqestion {
   position: absolute;
   border: 0.1rem solid #b2b2b2;
-  padding: 1.2rem 1.5rem;
+  border-top: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
   background-color: $white;
   max-height: 30rem;
   overflow-y: auto;
   width: 100%;
-
-  /* Стилизация скроллбара */
-  ::-webkit-scrollbar {
-    width: 8px; /* Ширина скроллбара */
+  background-color: $white;
+  z-index: 99;
+  li {
+    padding: 1.2rem 1.5rem;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      background-color: $light;
+    }
+  }
+  &::-webkit-scrollbar {
+    width: 0.4rem;
   }
 
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Цвет фона скроллбара */
-    border-radius: 4px;
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: #888; /* Цвет ползунка скроллбара */
-    border-radius: 4px;
+  &::-webkit-scrollbar-thumb {
+    background: $gray;
   }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Цвет ползунка при наведении */
-  }
-
-  /* Для Firefox */
-  scrollbar-width: thin; /* Толщина скроллбара */
-  scrollbar-color: #888 #f1f1f1; /* Цвет ползунка и фона */
 }
 
 .delivery__method {
@@ -165,10 +164,29 @@ const selectSuggestion = (suggestion: any) => {
 }
 
 .delivery__method-item {
+  input:checked + label {
+    &:after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
   label {
+    cursor: pointer;
     @include flex-start;
     position: relative;
     padding-left: 3.1rem;
+    font-size: 1.8rem;
+
+    span {
+      min-width: 22.8rem;
+      margin-right: 3.8rem;
+    }
+
+    img {
+      width: 5.3rem;
+      @include flex-start;
+      margin-right: 1rem;
+    }
     &:before {
       position: absolute;
       top: 50%;
@@ -183,15 +201,17 @@ const selectSuggestion = (suggestion: any) => {
     &:after {
       position: absolute;
       top: 50%;
-      left: 0;
+      left: 0.3rem;
       transform: translateY(-50%);
-      width: 1.6rem;
-      height: 1.6rem;
+      width: 1rem;
+      height: 1rem;
       content: "";
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1rem' height='1rem' viewBox='0 0 24 24'%3E%3Cpath fill='%23946b55' d='M18.71 7.21a1 1 0 0 0-1.42 0l-7.45 7.46l-3.13-3.14A1 1 0 1 0 5.29 13l3.84 3.84a1 1 0 0 0 1.42 0l8.16-8.16a1 1 0 0 0 0-1.47'/%3E%3C/svg%3E");
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease-in-out;
+      background-position: center center;
+      background-color: $brown;
+      border-radius: 100%;
     }
   }
 

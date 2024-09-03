@@ -5,13 +5,13 @@
         <h3>Рекомендуем сегодня</h3>
         <ul class="recomended_list">
           <li class="recomended_item">
-            <NuxtLink>
+            <NuxtLink to="/">
               <img src="/img/recomended-0.jpg" alt="" />
               <div class="item__sale">до <span>-40 %</span></div>
             </NuxtLink>
           </li>
           <li class="recomended_item">
-            <NuxtLink>
+            <NuxtLink to="/">
               <div class="recomended_item__content">
                 <span>23 апреля - 18 мая</span>
                 <h3>Уже тепло</h3>
@@ -30,7 +30,7 @@
             </NuxtLink>
           </li>
           <li class="recomended_item">
-            <NuxtLink>
+            <NuxtLink to="/">
               <img src="/img/recomended-2.jpg" alt="" />
               <div class="item__sale">до <span>-40 %</span></div>
             </NuxtLink>
@@ -64,6 +64,15 @@ import DefaultBtn from "../ui/DefaultBtn.vue";
   height: 100%;
   position: relative;
   max-height: 94.7rem;
+  background-color: $black;
+  img {
+    transition: all 0.3s ease-in-out;
+  }
+  &:hover {
+    img {
+      opacity: 0.8;
+    }
+  }
 
   &:nth-child(1) {
     .item__sale {

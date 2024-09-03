@@ -44,9 +44,14 @@ const isCenter = computed(() => props.center);
   font-family: $font_2;
   font-size: 2.4rem;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 
   &.center {
     justify-content: center;
+  }
+
+  &:hover {
+    background-color: $brown;
   }
 }
 

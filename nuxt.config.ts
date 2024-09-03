@@ -1,9 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  css: [
-  '~/assets/scss/style.scss' 
-],
+  css: ["~/assets/scss/style.scss"],
 
   vite: {
     css: {
@@ -12,34 +10,68 @@ export default defineNuxtConfig({
           additionalData: `
           @import "@/assets/scss/_mixins.scss";
           @import "@/assets/scss/_variables.scss";
-          `
-        }
-      }
-    }
+          `,
+        },
+      },
+    },
   },
-  modules: ["@nuxt/icon", "nuxt-swiper", "@pinia/nuxt", '@pinia-plugin-persistedstate/nuxt'],
+
+  modules: [
+    "@nuxt/icon",
+    "nuxt-swiper",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+  ],
+
+  plugins: ["~/plugins/yandex-pay.js"],
+
   app: {
     head: {
-      charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1',
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+      script: [
+        {
+          src: "https://pay.yandex.ru/sdk/v1/pay.js",
+          async: true,
+        },
+      ],
     },
-    pageTransition: { name: 'page', mode: 'out-in' }
+    pageTransition: { name: "page", mode: "out-in" },
   },
+
   swiper: {
-    prefix: 'Swiper',
-    styleLang: 'css',
-    modules: ['navigation', 'thumbs'], 
+    prefix: "Swiper",
+    styleLang: "css",
+    modules: ["navigation", "thumbs"],
   },
-  build:{
-      transpile: ['vue-toastification'],
+
+  build: {
+    transpile: ["vue-toastification"],
   },
+
   icon: {
-    provider: 'iconify',
+    provider: "iconify",
     customCollections: [
       {
-        prefix: 'custom',
-        dir: './assets/icons'
+        prefix: "custom",
+        dir: "./assets/icons",
       },
     ],
   },
-})
+
+  compatibilityDate: "2024-09-03",
+
+  runtimeConfig: {
+    public: {
+      BASE_URL: process.env.BASE_URL,
+    },
+  },
+
+  routeRules: {
+    "/api/**": {
+      proxy: {
+        to: `${process.env.BASE_URL}/**`,
+      },
+    },
+  },
+});

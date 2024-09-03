@@ -67,11 +67,13 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules: {
-    "/api/**": {
-      proxy: {
-        to: `${process.env.BASE_URL}/**`,
-      },
-    },
-  },
+  nitro: {
+    devProxy: {
+        '/api/': {
+            target: process.env.BASE_URL,
+            changeOrigin: true
+        }
+    }
+  }
+  
 });

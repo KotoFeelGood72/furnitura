@@ -1,25 +1,25 @@
-<!-- @format -->
+
 
 <template>
 	<div class="hits">
 		<div class="container">
 			<div class="hits_main p10">
 				<div class="hits__title">
-					<h2>Хиты продаж</h2>
+					<h2>{{ title }}</h2>
 				</div>
 				<ul class="hits_grid">
-					<li class="hits_item" v-for="(item, i) in hits" :key="`hits-item-${i}`">
+					<li class="hits_item" v-for="(item, i) in products" :key="`hits-item-${i}`">
 						<NuxtLink :to="`/shop/products/${i}`">
 							<div class="hits_item__content">
 								<span>{{ item.status }}</span>
-								<h3>{{ item.name }}</h3>
+								<h3>{{ item.title }}</h3>
 								<div class="hits_item__price">
 									<span>{{ item.price }}</span>
 									<span class="item__oldprice">{{ item.oldprice }}</span>
 								</div>
 							</div>
 							<div class="hits_item__img">
-								<img :src="item.img" alt="" />
+								<img :src="item.thumbnail" alt="" />
 							</div>
 						</NuxtLink>
 					</li>
@@ -30,6 +30,10 @@
 </template>
 
 <script setup lang="ts">
+defineProps<{
+	title: string
+	products: any
+}>()
 	const hits = ref<any>([
 		{
 			name: "Бескаркасное кресло Ингви",
@@ -134,9 +138,11 @@
 		@include flex-center;
 		width: 25rem;
 		z-index: 2;
+
 		img {
 			transition: all 0.5s ease-in-out;
 			z-index: 2;
+			width: 100%;
 		}
 	}
 </style>

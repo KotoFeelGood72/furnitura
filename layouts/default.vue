@@ -16,7 +16,7 @@
 import ModalAuth from "~/components/modal/ModalAuth.vue";
 import Header from "~/components/shared/Header.vue";
 import Footer from "~/components/shared/Footer.vue";
-import { useModalStoreRefs, useModalStore } from "~/stores/useModalStore";
+import { useModalStoreRefs, useModalStore } from "~/store/useModalStore";
 import { useSlots } from "vue";
 
 const { modals } = useModalStoreRefs();

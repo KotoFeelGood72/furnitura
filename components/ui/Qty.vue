@@ -1,66 +1,90 @@
-<!-- @format -->
-
 <template>
-	<div class="quantity">
-		<button @click="decreaseQuantity" class="quantity-btn" :disabled="quantity === 1">
-			<Icon name="ic:baseline-minus" />
-		</button>
-		<input type="number" v-model.number="quantity" class="quantity-input" min="1" />
-		<button @click="increaseQuantity" class="quantity-btn">
-			<Icon name="ic:baseline-plus" />
-		</button>
-	</div>
+  <div class="quantity">
+    <button
+      @click="decreaseQuantity"
+      class="quantity-btn"
+      :disabled="quantity === 1"
+    >
+      <Icon name="ic:baseline-minus" />
+    </button>
+    <input
+      type="number"
+      v-model.number="quantity"
+      class="quantity-input"
+      min="1"
+      @input="emitQuantityChange"
+    />
+    <button @click="increaseQuantity" class="quantity-btn">
+      <Icon name="ic:baseline-plus" />
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+import { ref, watch } from "vue";
 
-	const props = defineProps<{
-		initialQuantity: number;
-	}>();
+const props = defineProps<{
+  initialQuantity: number;
+}>();
 
-	const quantity = ref(props.initialQuantity);
+const emit = defineEmits(["updateQuantity"]);
 
-	const increaseQuantity = () => {
-		quantity.value += 1;
-	};
+const quantity = ref(props.initialQuantity);
 
-	const decreaseQuantity = () => {
-		if (quantity.value > 1) {
-			quantity.value -= 1;
-		}
-	};
+const increaseQuantity = () => {
+  quantity.value += 1;
+  emitQuantityChange();
+};
+
+const decreaseQuantity = () => {
+  if (quantity.value > 1) {
+    quantity.value -= 1;
+    emitQuantityChange();
+  }
+};
+
+const emitQuantityChange = () => {
+  emit("updateQuantity", quantity.value);
+};
+
+// Синхронизация начального количества при изменении пропсов
+watch(
+  () => props.initialQuantity,
+  (newValue) => {
+    quantity.value = newValue;
+  }
+);
 </script>
 
 <style scoped lang="scss">
-	.quantity {
-		@include flex-center;
-		max-width: 13.7rem;
-		gap: 1rem;
+.quantity {
+  @include flex-center;
+  max-width: 13.7rem;
+  gap: 1rem;
 
-		button {
-			min-width: 3.2rem;
-			width: 3.2rem;
-			height: 3.2rem;
-			@include flex-center;
-			background-color: $lbrown;
-			color: $white;
-			cursor: pointer;
-			transition: all 0.3s ease-in-out;
-			&:hover {
-				background-color: $brown;
-			}
-		}
-		input {
-			@include app;
-			min-width: 4rem;
-			text-align: center;
-		}
-	}
+  button {
+    min-width: 3.2rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    @include flex-center;
+    background-color: $lbrown;
+    color: $white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      background-color: $brown;
+    }
+  }
+  input {
+    @include app;
+    min-width: 4rem;
+    text-align: center;
+  }
+}
 
-	input::-webkit-outer-spin-button,
-	input::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>

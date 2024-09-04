@@ -1,30 +1,19 @@
 <!-- @format -->
 
 <template>
-  <div class="rent">
+  <div class="rent" v-if="page">
     <PageHead :data="head" page="rent" />
     <div class="rent_desc">
       <div class="container">
         <div class="rentdesc_main">
           <div class="rentdesc__img">
-            <img src="/img/rent-desc.png" alt="" />
+            <img :src="page.your_img.url" alt="" />
           </div>
           <div class="rentdesc__content">
             <ul>
-              <li>
-                <p>Кому это подойдет</p>
-                <span
-                  >Наши кресла-мешки предназначены для всех, кто хочет сделать
-                  свое мероприятие особенным.
-                </span>
-              </li>
-              <li>
-                <p>Наши предложения</p>
-                <span
-                  >Мы готовы предоставить до 200 кресел-мешков в прокат для
-                  вашего события и это не предел — мы всегда готовы предложить
-                  больше!
-                </span>
+              <li v-for="(item, i) in page.your_list" :key="'your-item-' + i">
+                <p>{{ item.title }}</p>
+                <span>{{ item.txt }} </span>
               </li>
             </ul>
           </div>
@@ -35,37 +24,19 @@
       <div class="container">
         <div class="price_main">
           <div class="price__content">
-            <h2>Стоимость аренды</h2>
+            <h2>{{ page.price_title }}</h2>
             <ul>
-              <li>
+              <li v-for="(item, i) in page.price_list" :key="'price-item-' + i">
                 <div class="price-icon">
                   <img src="@/assets/img/fruit.svg" alt="" />
                 </div>
-                <p>До <span>10</span> штук — <span>500</span> руб/шт/сутки</p>
-              </li>
-              <li>
-                <div class="price-icon">
-                  <img src="@/assets/img/fruit.svg" alt="" />
-                </div>
-                <p><span>10-19</span> штук — <span>450</span> руб/шт/сутки</p>
-              </li>
-              <li>
-                <div class="price-icon">
-                  <img src="@/assets/img/fruit.svg" alt="" />
-                </div>
-                <p><span>20-29</span> штук — <span>400</span> руб/шт/сутки</p>
-              </li>
-              <li>
-                <div class="price-icon">
-                  <img src="@/assets/img/fruit.svg" alt="" />
-                </div>
-                <p><span>80</span> и более — <span>350</span> руб/шт/сутки</p>
+                <div v-html="item.item"></div>
               </li>
             </ul>
             <div class="price_notice">Длительная аренда — еще выгоднее!</div>
           </div>
           <div class="price_img">
-            <img src="@/assets/img/price.png" alt="" />
+            <img :src="page.price_img.url" :alt="page.price_img.alt" />
           </div>
         </div>
       </div>
@@ -74,8 +45,8 @@
       <div class="container">
         <div class="colors_main">
           <div class="colors_head">
-            <h3>Цветовая палитра</h3>
-            <p>Выберите из множества цветов</p>
+            <h3>{{ page.colors_title }}</h3>
+            <p>{{ page.colors_subtitle }}</p>
           </div>
           <div class="colors_slder__w">
             <div class="color_slider">
@@ -90,12 +61,12 @@
                   }"
                 >
                   <SwiperSlide
-                    v-for="(item, i) in colorsSlides"
+                    v-for="(item, i) in page.colors_list"
                     :key="'colors-item-slide-' + i"
                   >
                     <div class="colors_slide">
                       <div class="color_slide__img">
-                        <img :src="item.img" alt="" />
+                        <img :src="item.img.url" :alt="item.img.alt" />
                       </div>
                       <div class="colors_slide__txt" v-html="item.name"></div>
                     </div>
@@ -118,25 +89,17 @@
     <div class="conditions">
       <div class="container">
         <div class="conditions_main">
-          <h3>Условия аренды пуфов – проще простого</h3>
+          <h3>{{ page.conditions_title }}</h3>
           <ul class="conditions_list">
-            <li class="conditions_item">
+            <li
+              class="conditions_item"
+              v-for="(item, i) in page.conditions_list"
+              :key="'conditions-item-' + i"
+            >
               <div class="conditions_item__img">
-                <img src="/img/cond-0.png" alt="" />
+                <img :src="item.img.url" :alt="item.img.alt" />
               </div>
-              <p>Никаких залогов и сложных условий</p>
-            </li>
-            <li class="conditions_item">
-              <div class="conditions_item__img">
-                <img src="/img/cond-1.png" alt="" />
-              </div>
-              <p>Работаем по договору — все четко и прозрачно</p>
-            </li>
-            <li class="conditions_item">
-              <div class="conditions_item__img">
-                <img src="/img/cond-2.png" alt="" />
-              </div>
-              <p>Наличная или безналичная оплата</p>
+              <p>{{ item.txt }}</p>
             </li>
           </ul>
         </div>
@@ -146,61 +109,20 @@
       <div class="container">
         <div class="rentxt__main">
           <div class="rentxt__row">
-            <h3>Почему нужно взять именно наши кресла-мешки в аренду?</h3>
+            <h3>{{ page.whats_title }}</h3>
             <ul>
-              <li>
-                <p>Максимальный комфорт</p>
-                <span
-                  >Размер, подходящий для взрослых, обеспечит полное
-                  удобство</span
-                >
-              </li>
-              <li>
-                <p>Максимальный комфорт</p>
-                <span
-                  >Размер, подходящий для взрослых, обеспечит полное
-                  удобство</span
-                >
-              </li>
-              <li>
-                <p>Максимальный комфорт</p>
-                <span
-                  >Размер, подходящий для взрослых, обеспечит полное
-                  удобство</span
-                >
-              </li>
-              <li>
-                <p>Универсальность</p>
-                <span
-                  >Используйте их как в помещении, так и на улице — наши кресла
-                  не боятся воды!</span
-                >
-              </li>
-              <li>
-                <p>Брендирование</p>
-                <span
-                  >Создайте уникальный стиль вашего мероприятия с помощью
-                  брендирования внешних чехлов</span
-                >
+              <li v-for="(item, i) in page.whats_list" :key="'whats-item-' + i">
+                <p>{{ item.title }}</p>
+                <span>{{ item.txt }}</span>
               </li>
             </ul>
           </div>
           <div class="rentxt__row">
-            <h3>Дополнительные услуги</h3>
+            <h3>{{ page.other_title }}</h3>
             <ul>
-              <li>
-                <p>Доставка под ключ</p>
-                <span
-                  >Мы доставим кресла-мешки прямо на место вашего мероприятия и
-                  расставим их так, чтобы все выглядело идеально.
-                </span>
-              </li>
-              <li>
-                <p>Расстановка</p>
-                <span
-                  >Мы доставим кресла-мешки прямо на место вашего мероприятия и
-                  расставим их так, чтобы все выглядело идеально.
-                </span>
+              <li v-for="(item, i) in page.other_list" :key="'other-item-' + i">
+                <p>{{ item.title }}</p>
+                <span>{{ item.txt }}</span>
               </li>
             </ul>
           </div>
@@ -210,25 +132,17 @@
     <div class="geo">
       <div class="container">
         <div class="geo_main">
-          <h2>География нашей работы</h2>
+          <h2>{{ page.geo_title }}</h2>
           <ul class="geo_list">
-            <li class="geo_item">
+            <li
+              class="geo_item"
+              v-for="(item, i) in page.geo_list"
+              :key="'geo-item-' + i"
+            >
               <div class="geo_item__img">
-                <img src="/img/geo-0.png" alt="" />
+                <img :src="item.img.url" :alt="item.img.alt" />
               </div>
-              <p>Краснодарский край</p>
-            </li>
-            <li class="geo_item">
-              <div class="geo_item__img">
-                <img src="/img/geo-1.png" alt="" />
-              </div>
-              <p>Ставропольский край</p>
-            </li>
-            <li class="geo_item">
-              <div class="geo_item__img">
-                <img src="/img/geo-3.png" alt="" />
-              </div>
-              <p>Ростов-на-Дону</p>
+              <p>{{ item.title }}</p>
             </li>
           </ul>
         </div>
@@ -237,41 +151,25 @@
     <div class="event">
       <div class="container">
         <div class="event_main">
-          <h3>События, где наши кресла станут звездами</h3>
+          <h3>{{ page.events_title }}</h3>
           <ul class="event_list">
-            <li class="event_item">
-              <p>Фестивали и концерты</p>
-              <span>Комфорт для всех гостей</span>
-            </li>
-            <li class="event_item">
-              <p>Дни рождения и детские праздники</p>
-              <span>Яркие и незабываемые моменты</span>
-            </li>
-            <li class="event_item">
-              <p>Корпоративы</p>
-              <span>Удобное пространство для общения и отдыха</span>
-            </li>
-            <li class="event_item">
-              <p>Кинопросмотры</p>
-              <span>Атмосфера настоящего кинотеатра под открытым небом</span>
-            </li>
-            <li class="event_item">
-              <p>Свадьбы</p>
-              <span>Романтика и уют в каждом моменте</span>
-            </li>
-            <li class="event_item">
-              <p>Кемпинги и походы</p>
-              <span>Комфорт для всех гостей</span>
+            <li
+              class="event_item"
+              v-for="(item, i) in page.events_list"
+              :key="'events-item-' + i"
+            >
+              <p>{{ item.title }}</p>
+              <span>{{ item.txt }}</span>
             </li>
           </ul>
           <ul class="event_grid">
             <li
               class="event_grid__item"
-              v-for="(item, i) in 4"
+              v-for="(item, i) in page.events_gallery"
               :key="'event-gallery-item' + i"
             >
-              <a :href="'/img/event-' + i + '.jpg'">
-                <img :src="'/img/event-' + i + '.jpg'" alt="" />
+              <a :href="item.img.url">
+                <img :src="item.img.url" :alt="item.img.alt" />
               </a>
             </li>
           </ul>
@@ -292,23 +190,27 @@ import PageHead from "~/components/head/PageHead.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Navigation } from "swiper/modules";
 import ActionBlock from "~/components/blocks/ActionBlock.vue";
-const head = ref<any>({
-  title: "Ощутите комфорт с арендой кресел-мешков (груш)",
-  txt: "Создайте незабываемое событие: погрузитесь в мир комфорта и уюта с нашими креслами-мешками, которые добавят особую атмосферу вашему мероприятию!",
-  img: "/img/rent-head.png",
-  btn: true,
-});
 
-const colorsSlides = ref<any>([
-  {
-    img: "/img/colors-slides-1.jpg",
-    name: "Белый <span>(на 150 руб. дороже)</span>",
-  },
-  { img: "/img/colors-slides-2.jpg", name: "Черный" },
-  { img: "/img/colors-slides-3.jpg", name: "Графит" },
-  { img: "/img/colors-slides-4.jpg", name: "Бежевый" },
-  { img: "/img/colors-slides-4.jpg", name: "Бежевый" },
-]);
+const page = ref<any>(null);
+const head = ref<any>(null);
+
+async function getRent() {
+  try {
+    const { $main } = useNuxtApp();
+    const response = await $main.get("/arenda.json");
+    page.value = response.data.acf;
+    head.value = {
+      title: page?.value?.hero_title,
+      txt: page?.value?.hero_txt,
+      img: page?.value?.hero_img.url,
+      btn: true,
+    };
+  } catch (error) {}
+}
+
+onMounted(async () => {
+  await getRent();
+});
 </script>
 
 <style scoped lang="scss">
@@ -363,7 +265,7 @@ const colorsSlides = ref<any>([
     li {
       @include flex-start;
       gap: 1.9rem;
-      span {
+      :deep(span) {
         color: $brown;
       }
     }
@@ -393,6 +295,9 @@ const colorsSlides = ref<any>([
 .color_slide__img {
   @include flex-center;
   margin-bottom: 1.5rem;
+  max-width: 41.5rem;
+  height: 25.9rem;
+  background-color: $light;
   img {
     width: 100%;
     height: 100%;
@@ -523,6 +428,7 @@ const colorsSlides = ref<any>([
 
 .geo_list {
   @include flex-space;
+  justify-content: space-around;
 }
 
 .geo_item__img {

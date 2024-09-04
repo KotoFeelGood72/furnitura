@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import Header from "./components/shared/Header.vue";
 import Footer from "./components/shared/Footer.vue";
-import { useProductsStore } from "./stores/useProductsStore";
+import { useProductsStore } from "./store/useProductsStore";
 
 const {getAllProducts} = useProductsStore()
 

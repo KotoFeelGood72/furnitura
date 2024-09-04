@@ -1,27 +1,22 @@
 <!-- @format -->
 
 <template>
-  <div class="degign">
+  <div class="degign" v-if="page">
     <PageHead :data="head" />
     <div class="whats">
       <div class="container">
         <div class="whats_main">
           <div class="whats__content">
-            <h2>Почему мы</h2>
-            <p>
-              Понимаем, что каждый интерьер требует особого подхода и внимания к
-              деталям. Поэтому предлагаем вам не просто мебель, а идеальный
-              инструмент для воплощения самых смелых и креативных идей. Наши
-              кресла-мешки созданы для того, чтобы стать неотъемлемой частью
-              вашего дизайнерского замысла, добавляя в пространство уют и стиль.
-            </p>
+            <h2>{{ page.whats_title }}</h2>
+            <p>{{ page.whats_txt }}</p>
           </div>
           <div class="whats_imgs">
-            <div class="whats_img">
-              <img src="/img/whats-1.jpg" alt="" />
-            </div>
-            <div class="whats_img">
-              <img src="/img/whats-2.jpg" alt="" />
+            <div
+              class="whats_img"
+              v-for="(item, i) in page.whats_gallery"
+              :key="'whats-item-g-' + i"
+            >
+              <img :src="item.img.url" :alt="item.img.alt" />
             </div>
           </div>
         </div>
@@ -30,15 +25,15 @@
     <div class="proposal">
       <div class="container">
         <div class="propposal_main">
-          <h3>Что мы предлагаем?</h3>
+          <h3>{{ page.services_title }}</h3>
           <ul class="propposal_list">
             <li
               class="proposal_item"
-              v-for="(item, i) in proposal"
+              v-for="(item, i) in page.services_list"
               :key="'proposal-item-' + i"
             >
               <div class="proposal_item__img">
-                <img :src="item.img" alt="" />
+                <img :src="item.img.url" :alt="item.img.alt" />
               </div>
               <div class="proposal_item__content">
                 <h3>{{ item.title }}</h3>
@@ -61,35 +56,26 @@
 import PageHead from "~/components/head/PageHead.vue";
 import ActionBlock from "~/components/blocks/ActionBlock.vue";
 
-const head = ref<any>({
-  title:
-    "Партнёрство с дизайнерами интерьеров: расширяя границы комфорта и эстетики",
-  txt: "Мы рады приветствовать вас в мире, где дизайн становится проще, а комфорт в интерьере доступен каждому. Наша компания, специализирующаяся на производстве уникальных кресел-мешков,    объявляет о запуске эксклюзивной программы сотрудничества с дизайнерами интерьеров.",
-  img: "/img/design-head.png",
-});
+const head = ref<any>();
+const page = ref<any>();
 
-const proposal = ref<any>([
-  {
-    title: " 3D модели по запросу",
-    txt: "Создавайте и воплощайте свои проекты с нашими 3D моделями кресел-мешков. Мы предоставляем высококачественные 3D модели, которые идеально впишутся в ваши визуализации, позволяя вам наглядно демонстрировать клиентам будущие интерьеры.",
-    img: "/img/pro-1.png",
-  },
-  {
-    title: "Индивидуальный подбор тканей",
-    txt: "Мы ценим уникальность каждого проекта. Поэтому предлагаем вам возможность выбора из широкого ассортимента тканей. Если в нашей коллекции нет подходящего варианта, мы с радостью предоставим возможность использовать любые другие материалы по вашему запросу.  От элитных тканей до экзотических текстур — все для того, чтобы ваши проекты стали ещё более оригинальными и эксклюзивными.",
-    img: "/img/pro-2.png",
-  },
-  {
-    title: "Разработка эксклюзивных моделей",
-    txt: "Хотите создать что-то совершенно уникальное? Наши дизайнеры готовы сотрудничать с вами для разработки эксклюзивных моделей кресел-мешков, которые будут изготовлены по индивидуальным эскизам. Мы учитываем ваши пожелания и требования, чтобы результат превзошел ожидания.",
-    img: "/img/pro-3.png",
-  },
-  {
-    title: "Наши клиенты",
-    txt: "Мы уже сотрудничаем с ведущими ивент-агентствами и престижными фирмами. Наши кресла-мешки украшают пространства, создавая атмосферу комфорта и роскоши. Мы гордимся тем, что можем быть частью вашего творческого процесса и помочь вам создавать неповторимые интерьеры.",
-    img: "/img/pro-4.png",
-  },
-]);
+async function getDesign() {
+  try {
+    const { $main } = useNuxtApp();
+    const response = await $main.get("/design.json");
+    page.value = response.data.acf;
+    head.value = {
+      title: page?.value?.hero_title,
+      txt: page?.value?.hero_txt,
+      img: page?.value?.hero_img.url,
+      btn: false,
+    };
+  } catch (error) {}
+}
+
+onMounted(async () => {
+  await getDesign();
+});
 </script>
 
 <style scoped lang="scss">

@@ -1,30 +1,52 @@
-<!-- @format -->
-
 <template>
   <div class="cart">
     <div class="container">
       <div class="cart_main">
         <div class="cart_main__content">
-          <h2>Корзина (2)</h2>
+          <h2>Корзина ({{ carts.length }})</h2>
           <div class="cart_products__w">
             <div class="cart_products__head">
+              <!-- Чекбокс для выбора всех товаров -->
               <div class="cart_select__all">
-                <input type="checkbox" name="select-all" id="select-all" />
+                <input
+                  type="checkbox"
+                  name="select-all"
+                  id="select-all"
+                  :checked="isAllSelected"
+                  @change="toggleSelectAll"
+                />
                 <label for="select-all">Выбрать все</label>
               </div>
-              <div class="cart_delete">Удалить</div>
+              <div class="cart_delete" @click="deleteSelectedItems">
+                Удалить
+              </div>
             </div>
             <ul class="cart_products__list">
-              <li class="cart_products__item">
+              <li
+                class="cart_products__item"
+                v-for="(item, i) in carts"
+                :key="'carts-item-' + i"
+              >
+                <div class="cart_select__single">
+                  <!-- Чекбокс для каждого товара -->
+                  <input
+                    type="checkbox"
+                    name="single-cart"
+                    :id="item.id"
+                    :checked="selectedItems.includes(item.id)"
+                    @change="toggleSelectItem(item.id)"
+                  />
+                  <label :for="item.id"></label>
+                </div>
                 <div class="cart_item__img">
-                  <img src="/img/about-1.jpg" alt="" />
+                  <img :src="item.thumbnail" alt="" />
                 </div>
                 <div class="cart_item__content">
-                  <h3>Бескаркасное кресло Империал</h3>
+                  <h3>{{ item.title }}</h3>
                   <ul>
                     <li>
                       <p>Цвет:</p>
-                      <span>Молочный</span>
+                      <span>{{ item.color }}</span>
                     </li>
                     <li>
                       <p>Размеры:</p>
@@ -33,8 +55,13 @@
                   </ul>
                 </div>
                 <div class="cart_item__action">
-                  <div class="cart_item__price">2.500 Р</div>
-                  <Qty :initialQuantity="1" />
+                  <div class="cart_item__price">{{ item.price }} Р</div>
+                  <Qty
+                    :initialQuantity="item.quantity"
+                    @updateQuantity="
+                      (quantity) => updateQuantity(item, quantity)
+                    "
+                  />
                 </div>
               </li>
             </ul>
@@ -48,13 +75,13 @@
         <div class="cart_totals">
           <div class="cart_total__head">
             <span>Итого</span>
-            <p>5 000 P</p>
+            <p>{{ totalPrice }} P</p>
           </div>
           <div class="cart_total__body">
             <ul>
               <li>
-                <span>2 товара на сумму</span>
-                <p>5 000</p>
+                <span>{{ carts.length }} товара(ов) на сумму</span>
+                <p>{{ totalPrice }}</p>
               </li>
               <li>
                 <span>Доставка</span>
@@ -90,6 +117,61 @@ import Qty from "~/components/ui/Qty.vue";
 import BlockUserInfo from "~/components/blocks/BlockUserInfo.vue";
 import BlockDeliveryCalc from "~/components/blocks/BlockDeliveryCalc.vue";
 import BlockPayment from "~/components/blocks/BlockPayment.vue";
+import { ref, computed } from "vue";
+import { useCartStoreRefs, useCartStore } from "~/store/useCartStore";
+
+// Доступ к товарам в корзине
+const { carts } = useCartStoreRefs();
+const { updateCartItem, removeCartItem } = useCartStore();
+
+// Храним выбранные товары
+const selectedItems = ref<string[]>([]);
+
+// Функция для обновления количества товара
+const updateQuantity = (item: any, quantity: number) => {
+  item.quantity = quantity;
+  updateCartItem(item); // Передаем обновленный объект товара
+};
+
+// Функция для удаления выбранных товаров
+const deleteSelectedItems = () => {
+  selectedItems.value.forEach((itemId) => {
+    removeCartItem(itemId); // Удаляем каждый выбранный товар из корзины по его id
+  });
+  selectedItems.value = []; // Очищаем массив выбранных товаров
+};
+
+// Функция для выбора/снятия товара
+const toggleSelectItem = (itemId: string) => {
+  if (selectedItems.value.includes(itemId)) {
+    selectedItems.value = selectedItems.value.filter((id) => id !== itemId);
+  } else {
+    selectedItems.value.push(itemId);
+  }
+};
+
+// Функция для выбора всех товаров
+const toggleSelectAll = (event: Event) => {
+  if ((event.target as HTMLInputElement).checked) {
+    selectedItems.value = carts.value.map((item: any) => item.id);
+  } else {
+    selectedItems.value = [];
+  }
+};
+
+// Проверяем, выбраны ли все товары
+const isAllSelected = computed(() => {
+  return (
+    carts.value.length > 0 && selectedItems.value.length === carts.value.length
+  );
+});
+
+// Вычисляемое свойство для подсчета общей стоимости товаров
+const totalPrice = computed(() => {
+  return carts.value.reduce((total: any, item: any) => {
+    return total + item.price * item.quantity; // Цена за товар * количество
+  }, 0);
+});
 </script>
 
 <style scoped lang="scss">
@@ -215,6 +297,7 @@ import BlockPayment from "~/components/blocks/BlockPayment.vue";
   background-color: $white;
   padding: 2rem 4rem 2rem 5.1rem;
   gap: 5rem;
+  position: relative;
 }
 
 .cart_item__img {
@@ -274,5 +357,46 @@ import BlockPayment from "~/components/blocks/BlockPayment.vue";
   display: flex;
   flex-direction: column;
   gap: 3.5rem;
+}
+
+.cart_select__single {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 1.5rem;
+  input {
+    display: none;
+    &:checked + label:after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  label {
+    border: 0.1rem solid $brown;
+    width: 1.6rem;
+    height: 1.6rem;
+    @include flex-center;
+    cursor: pointer;
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 1.6rem;
+      height: 1.6rem;
+      content: "";
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1rem' height='1rem' viewBox='0 0 24 24'%3E%3Cpath fill='%23946b55' d='M18.71 7.21a1 1 0 0 0-1.42 0l-7.45 7.46l-3.13-3.14A1 1 0 1 0 5.29 13l3.84 3.84a1 1 0 0 0 1.42 0l8.16-8.16a1 1 0 0 0 0-1.47'/%3E%3C/svg%3E");
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+}
+
+.cart_products__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 </style>

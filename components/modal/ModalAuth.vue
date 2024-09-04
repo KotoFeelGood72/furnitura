@@ -25,7 +25,7 @@
 	import AuthNew from "./auth/AuthNew.vue";
 	import AuthVerification from "./auth/AuthVerification.vue";
 	import PhoneForm from "./auth/PhoneForm.vue";
-	import { useModalStore } from "~/stores/useModalStore";
+	import { useModalStore } from "~/store/useModalStore";
 
 	const showVerification = ref(false);
 	const showPhoneForm = ref(false);

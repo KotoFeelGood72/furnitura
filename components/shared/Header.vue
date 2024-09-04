@@ -40,7 +40,7 @@
 	import IconBtn from "../ui/IconBtn.vue";
 	import Nav from "../ui/Nav.vue";
 	import { useRoute, useRouter } from "vue-router";
-	import { useModalStore } from "~/stores/useModalStore";
+	import { useModalStore } from "~/store/useModalStore";
 
 	const route = useRoute();
 	const router = useRouter();

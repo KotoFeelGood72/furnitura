@@ -1,10 +1,16 @@
 <template>
   <div
     class="button"
-    :class="['button', isColorSheme, isType, isSize, { center: isCenter }]"
+    :class="[
+      'button',
+      isColorSheme,
+      isType,
+      { center: isCenter },
+      { active: active },
+    ]"
   >
     <div class="btn-icon" v-if="icon">
-      <Icon name="custom:cart-white" size="26" />
+      <Icon :name="active ? 'custom:cart' : 'custom:cart-white'" size="26" />
     </div>
     <p>{{ name }}</p>
   </div>
@@ -15,8 +21,7 @@ import { withDefaults, defineProps } from "vue";
 const props = withDefaults(
   defineProps<{
     type?: "secondary" | "primary";
-    color?: "gray" | "brown" | "light" | "white";
-    size?: "small" | "medium" | "large";
+    active: boolean;
     name: string;
     icon?: string;
     center?: boolean;
@@ -25,12 +30,12 @@ const props = withDefaults(
     type: "secondary",
     color: "light",
     name: "Купить",
+    active: false,
   }
 );
 
 const isColorSheme = computed(() => props.color);
 const isType = computed(() => props.type);
-const isSize = computed(() => props.size);
 const isCenter = computed(() => props.center);
 </script>
 
@@ -45,6 +50,14 @@ const isCenter = computed(() => props.center);
   font-size: 2.4rem;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+
+  &.active {
+    background-color: $light;
+    color: $brown;
+    &:hover {
+      background-color: $light;
+    }
+  }
 
   &.center {
     justify-content: center;

@@ -1,7 +1,7 @@
 <template>
   <div class="home" v-if="home">
     <HeroSlider :slides="home.slider" />
-    <Hits :title="home.title_hit" :products="featuredProducts"/>
+    <Hits :title="home.title_hit" :products="featuredProducts" />
     <RecomendedBlock />
     <ActionBlock />
   </div>
@@ -12,14 +12,15 @@ import Hits from "~/components/blocks/Hits.vue";
 import ActionBlock from "~/components/blocks/ActionBlock.vue";
 import RecomendedBlock from "~/components/blocks/RecomendedBlock.vue";
 import HeroSlider from "~/components/blocks/HeroSlider.vue";
-import { useProductsStoreRefs } from "~/stores/useProductsStore";
+import { useProductsStoreRefs } from "~/store/useProductsStore";
 const home = ref<any>(null);
-const { products } = useProductsStoreRefs()
+const { products } = useProductsStoreRefs();
 
 const featuredProducts = computed(() => {
-  if(products.value) {
-
-    return products.value.filter((product: any) => product.is_featured === true);
+  if (products.value) {
+    return products.value.filter(
+      (product: any) => product.is_featured === true
+    );
   }
 });
 
@@ -36,33 +37,6 @@ async function fetchHome() {
 onMounted(async () => {
   await fetchHome();
 });
-
-const slides = ref<any>([
-  {
-    headtitle: "23-28 мая",
-    title: "Супер комфортная мебель только для Вас",
-    subtitle: "Дополнительная скидка только по промокоду",
-    img: "/img/hero.png",
-  },
-  {
-    headtitle: "23-28 мая",
-    title: "Супер комфортная мебель только для Вас",
-    subtitle: "Дополнительная скидка только по промокоду",
-    img: "/img/hero.png",
-  },
-  {
-    headtitle: "23-28 мая",
-    title: "Супер комфортная мебель только для Вас",
-    subtitle: "Дополнительная скидка только по промокоду",
-    img: "/img/hero.png",
-  },
-  {
-    headtitle: "23-28 мая",
-    title: "Супер комфортная мебель только для Вас",
-    subtitle: "Дополнительная скидка только по промокоду",
-    img: "/img/hero.png",
-  },
-]);
 </script>
 
 <style scoped lang="scss"></style>
